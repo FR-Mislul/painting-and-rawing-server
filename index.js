@@ -27,12 +27,34 @@ async function run() {
         await client.connect();
 
         const paintingCollection = client.db('paintingDB').collection('painting');
+        const commentCollection = client.db('paintingDB').collection('paintingComment');
+
+        app.get('/paintings', async(req, res) => {
+            const cursor = paintingCollection.find();
+            const result =await cursor.toArray();
+            res.send(result)
+        })
 
         app.post('/paintings', async(req, res) => {
             const newPainting = req.body;
             console.log(newPainting)
             const result = await paintingCollection.insertOne(newPainting);
+            res.send(result);
+        })
+
+
+        // painting comment 
+        app.get('/comments', async(req, res) => {
+            const cursor = commentCollection.find();
+            const result = await cursor.toArray();
             res.send(result)
+        })
+
+        app.post('/comments', async(req, res) => {
+            const newComment = req.body;
+            console.log(newComment)
+            const result = await commentCollection.insertOne(newComment);
+            res.send(result);
         })
 
 
